@@ -20,7 +20,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const nav = [
     { href: `/${locale}/dashboard`, label: t("dashboard"), icon: BarChart3 },
-    { href: `/${locale}/questions`, label: t("questions"), icon: FileQuestion },
+    { href: `/${locale}/questionnaires`, label: t("questions"), icon: FileQuestion },
     { href: `/${locale}/send-feedback`, label: t("send_feedback"), icon: Send },
     { href: `/${locale}/fill-feedback`, label: t("fill_feedback"), icon: ClipboardCheck },
     { href: `/${locale}/approvals`, label: t("approvals"), icon: ShieldCheck },

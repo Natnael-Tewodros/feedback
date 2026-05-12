@@ -13,15 +13,17 @@ public class CycleDtos {
     public record CycleRequest(
             @NotBlank String title,
             String description,
+            boolean isAnonymous,
             LocalDate startDate,
             LocalDate endDate,
-            @NotEmpty List<Long> questionIds
+            List<Long> questionIds
     ) {}
 
     public record CycleResponse(
             Long id,
             String title,
             String description,
+            boolean isAnonymous,
             CycleStatus status,
             LocalDate startDate,
             LocalDate endDate,
@@ -32,5 +34,6 @@ public class CycleDtos {
     public record SendRequest(@NotNull Long cycleId, @NotEmpty List<Long> userIds) {}
     public record AssignmentResponse(Long id, Long cycleId, String cycleTitle, Long assignedToId, String assignedToName, AssignmentStatus status) {}
     public record CloneCycleRequest(@NotBlank String title, String description, LocalDate startDate, LocalDate endDate) {}
+        public record AttachQuestionsRequest(@NotEmpty List<Long> questionIds) {}
 }
 

@@ -15,7 +15,7 @@ export type Question = {
   choices: Choice[];
 };
 export type Choice = { id: number; label: string; sortOrder: number; active: boolean };
-export type Cycle = { id: number; title: string; description?: string; status: string; startDate?: string; endDate?: string; questionIds: number[] };
+export type Cycle = { id: number; title: string; description?: string; isAnonymous: boolean; status: string; startDate?: string; endDate?: string; questionIds: number[] };
 export type Assignment = { id: number; cycleId: number; cycleTitle: string; assignedToId: number; assignedToName: string; status: string };
 export type UserSummary = { id: number; fullName: string; email: string; department?: string };
 export type AuthUser = { token: string | null; userId: number; fullName: string; email: string; roles: string[] };
@@ -40,6 +40,10 @@ export type SurveyReport = {
   totalResponses: number;
   questions: ReportQuestion[];
 };
+
+export function getCycles() {
+  return api<Cycle[]>("/api/cycles");
+}
 
 export function getAuth() {
   if (typeof window === "undefined") return null;

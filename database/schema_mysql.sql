@@ -62,6 +62,7 @@ CREATE TABLE feedback_cycles (
   status VARCHAR(30) DEFAULT 'DRAFT' NOT NULL,
   start_date DATE,
   end_date DATE,
+  is_anonymous TINYINT(1) DEFAULT 0 NOT NULL,
   cloned_from_cycle_id BIGINT,
   created_by BIGINT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -76,7 +77,7 @@ CREATE TABLE feedback_cycle_questions (
   sort_order INT DEFAULT 0 NOT NULL,
   CONSTRAINT pk_cycle_questions PRIMARY KEY (cycle_id, question_id),
   CONSTRAINT fk_cq_cycle FOREIGN KEY (cycle_id) REFERENCES feedback_cycles(id) ON DELETE CASCADE,
-  CONSTRAINT fk_cq_question FOREIGN KEY (question_id) REFERENCES questions(id)
+  CONSTRAINT fk_cq_question FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
 );
 
 CREATE TABLE feedback_assignments (
@@ -89,7 +90,7 @@ CREATE TABLE feedback_assignments (
   submitted_at TIMESTAMP NULL DEFAULT NULL,
   CONSTRAINT uq_assignment UNIQUE (cycle_id, assigned_to),
   CONSTRAINT ck_assignment_status CHECK (status IN ('PENDING','SUBMITTED','APPROVED','REJECTED')),
-  CONSTRAINT fk_assignment_cycle FOREIGN KEY (cycle_id) REFERENCES feedback_cycles(id),
+  CONSTRAINT fk_assignment_cycle FOREIGN KEY (cycle_id) REFERENCES feedback_cycles(id) ON DELETE CASCADE,
   CONSTRAINT fk_assignment_user FOREIGN KEY (assigned_to) REFERENCES app_users(id),
   CONSTRAINT fk_assignment_sender FOREIGN KEY (assigned_by) REFERENCES app_users(id)
 );
@@ -105,7 +106,7 @@ CREATE TABLE responses (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   CONSTRAINT uq_response UNIQUE (assignment_id, question_id),
   CONSTRAINT fk_response_assignment FOREIGN KEY (assignment_id) REFERENCES feedback_assignments(id) ON DELETE CASCADE,
-  CONSTRAINT fk_response_question FOREIGN KEY (question_id) REFERENCES questions(id),
+  CONSTRAINT fk_response_question FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE,
   CONSTRAINT fk_response_choice FOREIGN KEY (choice_id) REFERENCES choices(id)
 );
 
@@ -117,7 +118,7 @@ CREATE TABLE approvals (
   comments VARCHAR(1000),
   approved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   CONSTRAINT ck_approval_status CHECK (status IN ('APPROVED','REJECTED')),
-  CONSTRAINT fk_approval_assignment FOREIGN KEY (assignment_id) REFERENCES feedback_assignments(id),
+  CONSTRAINT fk_approval_assignment FOREIGN KEY (assignment_id) REFERENCES feedback_assignments(id) ON DELETE CASCADE,
   CONSTRAINT fk_approval_user FOREIGN KEY (approved_by) REFERENCES app_users(id)
 );
 
@@ -129,7 +130,7 @@ CREATE TABLE notification_logs (
   body VARCHAR(2000) NOT NULL,
   status VARCHAR(30) DEFAULT 'SIMULATED' NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  CONSTRAINT fk_notification_assignment FOREIGN KEY (assignment_id) REFERENCES feedback_assignments(id)
+  CONSTRAINT fk_notification_assignment FOREIGN KEY (assignment_id) REFERENCES feedback_assignments(id) ON DELETE CASCADE
 );
 
 CREATE INDEX idx_questions_type ON questions(type);

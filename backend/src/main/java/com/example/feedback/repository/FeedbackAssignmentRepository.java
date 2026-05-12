@@ -13,4 +13,5 @@ public interface FeedbackAssignmentRepository extends JpaRepository<FeedbackAssi
     Optional<FeedbackAssignment> findByCycle_IdAndAssignedTo_Id(Long cycleId, Long assignedToId);
     long countByCycle_Id(Long cycleId);
     long countByCycle_IdAndStatusIn(Long cycleId, List<AssignmentStatus> statuses);
+    void deleteByCycle_Id(Long cycleId);
 }

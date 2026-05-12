@@ -79,6 +79,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.13.0</version>
         <configuration>
+          <fork>true</fork>
+          <executable>/usr/lib/jvm/java-17-openjdk-amd64/bin/javac</executable>
           <release>17</release>
         </configuration>
       </plugin>

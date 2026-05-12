@@ -21,6 +21,8 @@ public class FeedbackCycle {
     private LocalDate startDate;
     @Column(name = "end_date")
     private LocalDate endDate;
+    @Column(name = "is_anonymous")
+    private boolean isAnonymous;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cloned_from_cycle_id")
     private FeedbackCycle clonedFromCycle;
@@ -41,6 +43,8 @@ public class FeedbackCycle {
     public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
     public LocalDate getEndDate() { return endDate; }
     public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+    public boolean isAnonymous() { return isAnonymous; }
+    public void setAnonymous(boolean anonymous) { isAnonymous = anonymous; }
     public FeedbackCycle getClonedFromCycle() { return clonedFromCycle; }
     public void setClonedFromCycle(FeedbackCycle clonedFromCycle) { this.clonedFromCycle = clonedFromCycle; }
     public User getCreatedBy() { return createdBy; }

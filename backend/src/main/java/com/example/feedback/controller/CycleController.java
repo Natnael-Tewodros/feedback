@@ -28,10 +28,29 @@ public class CycleController {
         return cycleService.create(request);
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    public CycleResponse update(@PathVariable Long id, @Valid @RequestBody CycleRequest request) {
+        return cycleService.update(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        cycleService.delete(id);
+    }
+
     @PostMapping({"/send", "/send/"})
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public List<AssignmentResponse> send(@Valid @RequestBody SendRequest request) {
         return cycleService.send(request);
+    }
+
+    @PostMapping({"/{id}/questions", "/{id}/questions/"})
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    public CycleResponse attachQuestions(@PathVariable Long id, @Valid @RequestBody AttachQuestionsRequest request) {
+        return cycleService.attachQuestions(id, request.questionIds());
     }
 
     @PostMapping("/{id}/clone")

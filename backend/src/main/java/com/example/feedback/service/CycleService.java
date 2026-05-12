@@ -43,11 +43,40 @@ public class CycleService {
         FeedbackCycle cycle = new FeedbackCycle();
         cycle.setTitle(request.title());
         cycle.setDescription(request.description());
+        cycle.setAnonymous(request.isAnonymous());
         cycle.setStartDate(request.startDate());
         cycle.setEndDate(request.endDate());
         cycle.setCreatedBy(currentUser.get());
         cycles.save(cycle);
-        attachQuestions(cycle, request.questionIds());
+        if (request.questionIds() != null && !request.questionIds().isEmpty()) {
+            attachQuestions(cycle, request.questionIds(), 0);
+        }
+        return toResponse(cycle);
+    }
+
+    @Transactional
+    public CycleResponse update(Long id, CycleRequest request) {
+        FeedbackCycle cycle = find(id);
+        cycle.setTitle(request.title());
+        cycle.setDescription(request.description());
+        cycle.setAnonymous(request.isAnonymous());
+        cycle.setStartDate(request.startDate());
+        cycle.setEndDate(request.endDate());
+        cycles.save(cycle);
+        return toResponse(cycle);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        FeedbackCycle cycle = find(id);
+        cycles.delete(cycle);
+    }
+
+    @Transactional
+    public CycleResponse attachQuestions(Long cycleId, List<Long> questionIds) {
+        FeedbackCycle cycle = find(cycleId);
+        int startOrder = cycleQuestions.findByCycle_IdOrderBySortOrderAsc(cycle.getId()).size();
+        attachQuestions(cycle, questionIds, startOrder);
         return toResponse(cycle);
     }
 
@@ -91,7 +120,7 @@ public class CycleService {
         cycles.save(clone);
         List<Long> sourceQuestionIds = cycleQuestions.findByCycle_IdOrderBySortOrderAsc(source.getId())
                 .stream().map(cq -> cq.getQuestion().getId()).toList();
-        attachQuestions(clone, sourceQuestionIds);
+        attachQuestions(clone, sourceQuestionIds, 0);
         return toResponse(clone);
     }
 
@@ -99,15 +128,17 @@ public class CycleService {
         return cycles.findById(id).orElseThrow(() -> new EntityNotFoundException("Feedback cycle not found: " + id));
     }
 
-    private void attachQuestions(FeedbackCycle cycle, List<Long> questionIds) {
+    private void attachQuestions(FeedbackCycle cycle, List<Long> questionIds, int startOrder) {
         for (int i = 0; i < questionIds.size(); i++) {
             Long questionId = questionIds.get(i);
+            FeedbackCycleQuestionId id = new FeedbackCycleQuestionId(cycle.getId(), questionId);
+            if (cycleQuestions.existsById(id)) continue;
             Question q = questions.findById(questionId)
                     .orElseThrow(() -> new EntityNotFoundException("Question not found: " + questionId));
             FeedbackCycleQuestion cq = new FeedbackCycleQuestion();
             cq.setCycle(cycle);
             cq.setQuestion(q);
-            cq.setSortOrder(i);
+            cq.setSortOrder(startOrder + i);
             cycleQuestions.save(cq);
         }
     }
@@ -115,7 +146,7 @@ public class CycleService {
     public CycleResponse toResponse(FeedbackCycle cycle) {
         List<Long> questionIds = cycleQuestions.findByCycle_IdOrderBySortOrderAsc(cycle.getId())
                 .stream().map(cq -> cq.getQuestion().getId()).toList();
-        return new CycleResponse(cycle.getId(), cycle.getTitle(), cycle.getDescription(), cycle.getStatus(),
+        return new CycleResponse(cycle.getId(), cycle.getTitle(), cycle.getDescription(), cycle.isAnonymous(), cycle.getStatus(),
                 cycle.getStartDate(), cycle.getEndDate(),
                 cycle.getClonedFromCycle() == null ? null : cycle.getClonedFromCycle().getId(), questionIds);
     }
