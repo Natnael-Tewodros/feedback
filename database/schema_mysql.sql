@@ -34,6 +34,8 @@ CREATE TABLE questions (
   type VARCHAR(30) NOT NULL,
   rating_min INT,
   rating_max INT,
+  start_date DATE,
+  end_date DATE,
   active TINYINT(1) DEFAULT 1 NOT NULL,
   cloned_from_question_id BIGINT,
   created_by BIGINT NOT NULL,

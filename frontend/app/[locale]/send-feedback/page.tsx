@@ -4,9 +4,12 @@ import { Guard } from "@/components/Guard";
 import { PageHeader } from "@/components/PageHeader";
 import { api, AuthUser, Cycle, getAuth, Question, UserSummary } from "@/lib/api";
 import { Send } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { FormEvent, useEffect, useState } from "react";
 
 export default function SendFeedbackPage() {
+  const t = useTranslations("SendFeedback");
+  const tCommon = useTranslations("Common");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [users, setUsers] = useState<UserSummary[]>([]);
   const [cycles, setCycles] = useState<Cycle[]>([]);
@@ -40,7 +43,7 @@ export default function SendFeedbackPage() {
           await load();
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Could not load send-feedback data");
+        setError(err instanceof Error ? err.message : t("load_error"));
       } finally {
         setLoading(false);
       }
@@ -57,15 +60,15 @@ export default function SendFeedbackPage() {
     setError("");
     setNotice("");
     if (!canManage) {
-      setError("Only Admin or Manager users can create feedback cycles.");
+      setError(t("create_permission_error"));
       return;
     }
     if (!title.trim()) {
-      setError("Cycle title is required.");
+      setError(t("title_required"));
       return;
     }
     if (!selectedQuestions.length) {
-      setError("Select at least one question before creating a cycle.");
+      setError(t("question_required"));
       return;
     }
     try {
@@ -73,10 +76,10 @@ export default function SendFeedbackPage() {
       setCycleId(cycle.id);
       setTitle("");
       setSelectedQuestions([]);
-      setNotice(`Created cycle: ${cycle.title}`);
+      setNotice(t("created_cycle", { title: cycle.title }));
       await load();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not create cycle");
+      setError(err instanceof Error ? err.message : t("create_error"));
     }
   }
 
@@ -84,44 +87,44 @@ export default function SendFeedbackPage() {
     setError("");
     setNotice("");
     if (!canManage) {
-      setError("Only Admin or Manager users can send feedback.");
+      setError(t("send_permission_error"));
       return;
     }
     if (!cycleId) {
-      setError("Select a cycle first.");
+      setError(t("cycle_required"));
       return;
     }
     if (!selectedUsers.length) {
-      setError("Select at least one recipient.");
+      setError(t("recipient_required"));
       return;
     }
     try {
       await api("/api/cycles/send", { method: "POST", body: JSON.stringify({ cycleId, userIds: selectedUsers }) });
       setSelectedUsers([]);
-      setNotice("Feedback sent successfully.");
+      setNotice(t("sent_success"));
       await load();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not send feedback");
+      setError(err instanceof Error ? err.message : t("send_error"));
     }
   }
 
   return (
     <Guard>
-      <PageHeader title="Send Feedback" subtitle="Create a cycle, attach questions, and assign it to users" />
+      <PageHeader title={t("title")} subtitle={t("subtitle")} />
       {error && <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
       {notice && <div className="mb-4 rounded-md border border-teal-200 bg-teal-50 p-3 text-sm text-teal-800">{notice}</div>}
-      {loading && <div className="rounded-md border border-line bg-white p-4 text-sm text-muted">Loading...</div>}
+      {loading && <div className="rounded-md border border-line bg-white p-4 text-sm text-muted">{tCommon("loading")}</div>}
       {!loading && !canManage && (
         <div className="rounded-md border border-line bg-white p-4 text-sm text-muted">
-          You can view and fill assigned feedback, but only Admin or Manager users can create cycles and send feedback.
+          {t("view_only")}
         </div>
       )}
       {!loading && canManage && (
       <>
       <form onSubmit={createCycle} className="mb-5 rounded-md border border-line bg-white p-4">
         <div className="grid gap-3 md:grid-cols-[1fr_auto]">
-          <input placeholder="Cycle title" value={title} onChange={(e) => setTitle(e.target.value)} />
-          <button type="submit" className="bg-brand text-white">Create Cycle</button>
+          <input placeholder={t("cycle_title")} value={title} onChange={(e) => setTitle(e.target.value)} />
+          <button type="submit" className="bg-brand text-white">{t("create_cycle")}</button>
         </div>
         <div className="mt-4 grid gap-2 md:grid-cols-2">
           {questions.map(q => (
@@ -133,14 +136,14 @@ export default function SendFeedbackPage() {
       </form>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-md border border-line bg-white p-4">
-          <h2 className="font-semibold">Cycle</h2>
+          <h2 className="font-semibold">{t("cycle")}</h2>
           <select className="mt-3" value={cycleId} onChange={(e) => setCycleId(e.target.value ? Number(e.target.value) : "")}>
-            <option value="">Select cycle</option>
+            <option value="">{t("select_cycle")}</option>
             {cycles.map(c => <option key={c.id} value={c.id}>{c.title} ({c.status})</option>)}
           </select>
         </div>
         <div className="rounded-md border border-line bg-white p-4">
-          <h2 className="font-semibold">Recipients</h2>
+          <h2 className="font-semibold">{t("recipients")}</h2>
           <div className="mt-3 space-y-2">
             {users.map(u => (
               <label key={u.id} className="flex gap-2 text-sm">
@@ -148,7 +151,7 @@ export default function SendFeedbackPage() {
               </label>
             ))}
           </div>
-          <button type="button" disabled={!cycleId || !selectedUsers.length} onClick={send} className="mt-4 flex items-center gap-2 bg-brand text-white disabled:opacity-50"><Send size={16} /> Send</button>
+          <button type="button" disabled={!cycleId || !selectedUsers.length} onClick={send} className="mt-4 flex items-center gap-2 bg-brand text-white disabled:opacity-50"><Send size={16} /> {t("send")}</button>
         </div>
       </div>
       </>

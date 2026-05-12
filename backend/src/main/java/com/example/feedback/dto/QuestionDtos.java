@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class QuestionDtos {
@@ -16,6 +17,8 @@ public class QuestionDtos {
             @NotNull QuestionType type,
             Integer ratingMin,
             Integer ratingMax,
+            LocalDate startDate,
+            LocalDate endDate,
             Boolean active,
             List<ChoiceRequest> choices
     ) {}
@@ -26,9 +29,10 @@ public class QuestionDtos {
             QuestionType type,
             Integer ratingMin,
             Integer ratingMax,
+            LocalDate startDate,
+            LocalDate endDate,
             boolean active,
             Long clonedFromQuestionId,
             List<ChoiceResponse> choices
     ) {}
 }
-

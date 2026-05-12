@@ -60,6 +60,8 @@ public class QuestionService {
         clone.setType(source.getType());
         clone.setRatingMin(source.getRatingMin());
         clone.setRatingMax(source.getRatingMax());
+        clone.setStartDate(source.getStartDate());
+        clone.setEndDate(source.getEndDate());
         clone.setActive(true);
         clone.setCreatedBy(currentUser.get());
         clone.setClonedFromQuestion(source);
@@ -84,6 +86,11 @@ public class QuestionService {
         q.setActive(request.active() == null || request.active());
         q.setRatingMin(request.ratingMin());
         q.setRatingMax(request.ratingMax());
+        q.setStartDate(request.startDate());
+        q.setEndDate(request.endDate());
+        if (request.startDate() != null && request.endDate() != null && request.startDate().isAfter(request.endDate())) {
+            throw new IllegalArgumentException("Start date must be before or equal to end date");
+        }
         if (request.type() == QuestionType.RATING && (request.ratingMin() == null || request.ratingMax() == null || request.ratingMin() >= request.ratingMax())) {
             throw new IllegalArgumentException("Rating questions require ratingMin < ratingMax");
         }
@@ -114,7 +121,7 @@ public class QuestionService {
 
     public QuestionResponse toResponse(Question q) {
         return new QuestionResponse(q.getId(), q.getText(), q.getType(), q.getRatingMin(), q.getRatingMax(),
-                q.isActive(), q.getClonedFromQuestion() == null ? null : q.getClonedFromQuestion().getId(),
+                q.getStartDate(), q.getEndDate(), q.isActive(), q.getClonedFromQuestion() == null ? null : q.getClonedFromQuestion().getId(),
                 q.getChoices().stream().map(c -> new ChoiceResponse(c.getId(), c.getLabel(), c.getSortOrder(), c.isActive())).toList());
     }
 }

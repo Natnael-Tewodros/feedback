@@ -3,6 +3,7 @@ package com.example.feedback.domain;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,10 @@ public class Question {
     private Integer ratingMin;
     @Column(name = "rating_max")
     private Integer ratingMax;
+    @Column(name = "start_date")
+    private LocalDate startDate;
+    @Column(name = "end_date")
+    private LocalDate endDate;
     private boolean active = true;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cloned_from_question_id")
@@ -48,6 +53,10 @@ public class Question {
     public void setRatingMin(Integer ratingMin) { this.ratingMin = ratingMin; }
     public Integer getRatingMax() { return ratingMax; }
     public void setRatingMax(Integer ratingMax) { this.ratingMax = ratingMax; }
+    public LocalDate getStartDate() { return startDate; }
+    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+    public LocalDate getEndDate() { return endDate; }
+    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
     public Question getClonedFromQuestion() { return clonedFromQuestion; }
@@ -58,4 +67,3 @@ public class Question {
     public Instant getUpdatedAt() { return updatedAt; }
     public List<Choice> getChoices() { return choices; }
 }
-

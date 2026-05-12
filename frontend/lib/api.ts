@@ -9,14 +9,37 @@ export type Question = {
   type: QuestionType;
   ratingMin?: number;
   ratingMax?: number;
+  startDate?: string;
+  endDate?: string;
   active: boolean;
   choices: Choice[];
 };
 export type Choice = { id: number; label: string; sortOrder: number; active: boolean };
-export type Cycle = { id: number; title: string; description?: string; status: string; questionIds: number[] };
+export type Cycle = { id: number; title: string; description?: string; status: string; startDate?: string; endDate?: string; questionIds: number[] };
 export type Assignment = { id: number; cycleId: number; cycleTitle: string; assignedToId: number; assignedToName: string; status: string };
 export type UserSummary = { id: number; fullName: string; email: string; department?: string };
 export type AuthUser = { token: string | null; userId: number; fullName: string; email: string; roles: string[] };
+export type ReportChoice = { choiceId: number; label: string; count: number };
+export type ReportQuestion = {
+  questionId: number;
+  text: string;
+  type: QuestionType;
+  responseCount: number;
+  averageRating?: number | null;
+  yesCount?: number | null;
+  noCount?: number | null;
+  choices: ReportChoice[];
+  textAnswers: string[];
+};
+export type SurveyReport = {
+  id: number;
+  title: string;
+  description?: string;
+  status: string;
+  generatedAt: string;
+  totalResponses: number;
+  questions: ReportQuestion[];
+};
 
 export function getAuth() {
   if (typeof window === "undefined") return null;

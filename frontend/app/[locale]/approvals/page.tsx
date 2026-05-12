@@ -4,11 +4,14 @@ import { Guard } from "@/components/Guard";
 import { PageHeader } from "@/components/PageHeader";
 import { api, Assignment, AuthUser, getAuth } from "@/lib/api";
 import { Check, Clock, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 type ApprovalTab = "SUBMITTED" | "APPROVED" | "REJECTED";
 
 export default function ApprovalsPage() {
+  const t = useTranslations("Approvals");
+  const tCommon = useTranslations("Common");
   const [items, setItems] = useState<Assignment[]>([]);
   const [tab, setTab] = useState<ApprovalTab>("SUBMITTED");
   const [error, setError] = useState("");
@@ -22,7 +25,7 @@ export default function ApprovalsPage() {
       setError("");
       setItems(await api<Assignment[]>(`/api/approvals?status=${status}`));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not load approvals");
+      setError(err instanceof Error ? err.message : t("load_error"));
     }
   }
 
@@ -39,7 +42,7 @@ export default function ApprovalsPage() {
           await load(tab);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Please log in again.");
+        setError(err instanceof Error ? err.message : t("login_again"));
       } finally {
         setLoading(false);
       }
@@ -52,34 +55,34 @@ export default function ApprovalsPage() {
       setError("");
       setNotice("");
       await api(`/api/approvals/assignments/${id}`, { method: "POST", body: JSON.stringify({ status, comments: status.toLowerCase() }) });
-      setNotice(status === "APPROVED" ? "Feedback approved successfully." : "Feedback rejected and returned for resubmission.");
+      setNotice(status === "APPROVED" ? t("approve_success") : t("reject_success"));
       await load();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not update approval");
+      setError(err instanceof Error ? err.message : t("update_error"));
     }
   }
 
   function keepPending(name: string) {
     setError("");
-    setNotice(`${name}'s feedback is still pending review.`);
+    setNotice(t("still_pending", { name }));
   }
 
   return (
     <Guard>
-      <PageHeader title="Pending Approvals" subtitle="Review submitted feedback before finalizing" />
-      {loading && <div className="mb-4 rounded-md border border-line bg-white p-4 text-sm text-muted">Loading...</div>}
+      <PageHeader title={t("title")} subtitle={t("subtitle")} />
+      {loading && <div className="mb-4 rounded-md border border-line bg-white p-4 text-sm text-muted">{tCommon("loading")}</div>}
       {!loading && !canManage && (
         <div className="mb-4 rounded-md border border-line bg-white p-4 text-sm text-muted">
-          Only Admin or Manager users can access approvals. Log in again with an Admin or Manager account.
+          {t("view_only")}
         </div>
       )}
       {!loading && canManage && (
       <>
       <div className="mb-4 flex flex-wrap gap-2">
         {[
-          ["SUBMITTED", "Pending"],
-          ["APPROVED", "Approved"],
-          ["REJECTED", "Rejected"]
+          ["SUBMITTED", t("pending")],
+          ["APPROVED", t("approved")],
+          ["REJECTED", t("rejected")]
         ].map(([value, label]) => (
           <button
             key={value}
@@ -102,14 +105,14 @@ export default function ApprovalsPage() {
             </div>
             {tab === "SUBMITTED" && (
               <div className="flex flex-wrap gap-2">
-                <button title="Approve" onClick={() => decide(a.id, "APPROVED")} className="flex items-center gap-2 border border-line text-brand"><Check size={16} /> Approve</button>
-                <button title="Keep pending" onClick={() => keepPending(a.assignedToName)} className="flex items-center gap-2 border border-line text-muted"><Clock size={16} /> Pending</button>
-                <button title="Reject" onClick={() => decide(a.id, "REJECTED")} className="flex items-center gap-2 border border-line text-red-700"><X size={16} /> Reject</button>
+                <button title={t("approve")} onClick={() => decide(a.id, "APPROVED")} className="flex items-center gap-2 border border-line text-brand"><Check size={16} /> {t("approve")}</button>
+                <button title={t("keep_pending")} onClick={() => keepPending(a.assignedToName)} className="flex items-center gap-2 border border-line text-muted"><Clock size={16} /> {t("pending")}</button>
+                <button title={t("reject")} onClick={() => decide(a.id, "REJECTED")} className="flex items-center gap-2 border border-line text-red-700"><X size={16} /> {t("reject")}</button>
               </div>
             )}
           </div>
         ))}
-        {!items.length && <div className="p-4 text-sm text-muted">No {tab === "SUBMITTED" ? "pending" : tab.toLowerCase()} approvals found.</div>}
+        {!items.length && <div className="p-4 text-sm text-muted">{t("none_found", { status: tab === "SUBMITTED" ? t("pending_lower") : tab.toLowerCase() })}</div>}
       </div>
       </>
       )}
