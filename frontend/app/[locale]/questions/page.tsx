@@ -20,6 +20,10 @@ export default function QuestionsPage() {
   const [text, setText] = useState("");
   const [type, setType] = useState<QuestionType>("TEXT");
   const [choices, setChoices] = useState<Choice[]>([]);
+  const [ratingMin, setRatingMin] = useState<string>("1");
+  const [ratingMax, setRatingMax] = useState<string>("5");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
     api<Question[]>("/api/questions").then((data) => setQuestions(data));
@@ -30,6 +34,10 @@ export default function QuestionsPage() {
     setText(question.text);
     setType(question.type);
     setChoices(question.choices?.map((c) => ({ id: c.id, label: c.label })) ?? []);
+    setRatingMin(question.ratingMin != null ? String(question.ratingMin) : "1");
+    setRatingMax(question.ratingMax != null ? String(question.ratingMax) : "5");
+    setStartDate(question.startDate ?? "");
+    setEndDate(question.endDate ?? "");
   }
 
   function reset() {
@@ -37,6 +45,16 @@ export default function QuestionsPage() {
     setText("");
     setType("TEXT");
     setChoices([]);
+    setRatingMin("1");
+    setRatingMax("5");
+    setStartDate("");
+    setEndDate("");
+  }
+
+  function handleTypeChange(newType: QuestionType) {
+    setType(newType);
+    // Clear choices when switching away from MCQ
+    if (newType !== "MCQ") setChoices([]);
   }
 
   async function save(e: FormEvent) {
@@ -44,10 +62,16 @@ export default function QuestionsPage() {
     const method = editingQuestion ? "PUT" : "POST";
     const url = editingQuestion ? `/api/questions/${editingQuestion.id}` : "/api/questions";
 
-    const body = {
+    const body: Record<string, unknown> = {
       text,
       type,
-      choices: choices.map((c, i) => ({ ...c, sortOrder: i })),
+      // Only send choices for MCQ; sending an empty array causes a backend validation error
+      choices: type === "MCQ" ? choices.map((c, i) => ({ ...c, sortOrder: i })) : null,
+      // Only send ratingMin/ratingMax for RATING type
+      ratingMin: type === "RATING" ? Number(ratingMin) : null,
+      ratingMax: type === "RATING" ? Number(ratingMax) : null,
+      startDate: startDate || null,
+      endDate: endDate || null,
     };
 
     try {
@@ -134,13 +158,47 @@ export default function QuestionsPage() {
             </label>
             <label className="block">
               <span className="text-sm font-medium">{t("question_type_label")}</span>
-              <select value={type} onChange={(e) => setType(e.target.value as QuestionType)} className="mt-1 w-full">
+              <select value={type} onChange={(e) => handleTypeChange(e.target.value as QuestionType)} className="mt-1 w-full">
                 <option value="TEXT">Text</option>
                 <option value="RATING">Rating</option>
                 <option value="YES_NO">Yes/No</option>
                 <option value="MCQ">Multiple Choice</option>
               </select>
             </label>
+            <div className="grid grid-cols-2 gap-4">
+              <label className="block">
+                <span className="text-sm font-medium">Start Date</span>
+                <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="mt-1 w-full rounded-md border p-2 text-sm" />
+              </label>
+              <label className="block">
+                <span className="text-sm font-medium">End Date</span>
+                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="mt-1 w-full rounded-md border p-2 text-sm" />
+              </label>
+            </div>
+            {type === "RATING" && (
+              <div className="grid grid-cols-2 gap-4">
+                <label className="block">
+                  <span className="text-sm font-medium">Min Rating</span>
+                  <input
+                    type="number"
+                    value={ratingMin}
+                    onChange={(e) => setRatingMin(e.target.value)}
+                    className="mt-1 w-full rounded-md border p-2 text-sm"
+                    required
+                  />
+                </label>
+                <label className="block">
+                  <span className="text-sm font-medium">Max Rating</span>
+                  <input
+                    type="number"
+                    value={ratingMax}
+                    onChange={(e) => setRatingMax(e.target.value)}
+                    className="mt-1 w-full rounded-md border p-2 text-sm"
+                    required
+                  />
+                </label>
+              </div>
+            )}
             {type === "MCQ" && (
               <div>
                 <h3 className="text-sm font-medium">{t("choices_label")}</h3>

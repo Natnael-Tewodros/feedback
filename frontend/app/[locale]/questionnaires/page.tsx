@@ -3,6 +3,8 @@
 import { Guard } from "@/components/Guard";
 import { PageHeader } from "@/components/PageHeader";
 import { Cycle, getCycles, api } from "@/lib/api";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useState } from "react";
@@ -155,14 +157,22 @@ export default function QuestionnairesPage() {
                   placeholder={t("survey_description_placeholder")}
                 />
               </label>
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                <input
-                  type="checkbox"
-                  checked={isAnonymous}
-                  onChange={(event) => setIsAnonymous(event.target.checked)}
-                />
-                {t("survey_anonymous_label")}
-              </label>
+              <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+                <div>
+                  <Label htmlFor="anonymous-switch" className="text-sm font-medium text-gray-700 cursor-pointer">
+                    {t("survey_anonymous_label")}
+                  </Label>
+                  <p className="text-xs text-gray-500 mt-0.5">Responses will not be linked to respondents</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500">{isAnonymous ? "Yes" : "No"}</span>
+                  <Switch
+                    id="anonymous-switch"
+                    checked={isAnonymous}
+                    onCheckedChange={setIsAnonymous}
+                  />
+                </div>
+              </div>
               <div className="flex justify-end gap-2">
                 <button
                   type="button"

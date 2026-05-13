@@ -21,6 +21,7 @@ export default function DashboardPage() {
   return (
     <Guard>
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
+
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {modules.map((module) => {
           const Icon = module.icon;

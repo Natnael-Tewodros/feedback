@@ -1,0 +1,165 @@
+"use client";
+
+import { useTheme } from "next-themes";
+import { useAuth } from "@/components/auth-provider";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { LogOut, Moon, Sun, Key, User } from "lucide-react";
+import Link from "next/link";
+
+export function AccountMenu() {
+  const { user, logout } = useAuth();
+  const { theme, setTheme } = useTheme();
+
+  const name =
+    user?.firstName && user?.lastName
+      ? `${user.firstName} ${user.lastName}`
+      : undefined;
+  const email = user?.email ?? "";
+  const role = user?.role ?? "";
+  const initials =
+    name
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("") ||
+    email.charAt(0).toUpperCase() ||
+    "?";
+
+  const isDark = theme === "dark";
+
+  const prettyRole = role
+    ? role
+        .toLowerCase()
+        .split("_")
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(" ")
+    : "";
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          className="group relative h-9 px-1 rounded-full hover:bg-muted transition-all duration-200"
+          aria-label="Account menu"
+        >
+          <div className="flex items-center gap-2 max-w-[160px] sm:max-w-none">
+            <Avatar className="h-8 w-8 border border-border shadow-sm group-hover:border-primary/30 transition-colors">
+              <AvatarFallback className="bg-primary/10 text-primary font-semibold text-xs transition-colors group-hover:bg-primary/20">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+            <div className="hidden sm:flex flex-col items-start pr-1 min-w-0">
+              <span className="text-xs font-semibold leading-none truncate max-w-[110px] sm:max-w-[160px]">
+                {name || email.split("@")[0]}
+              </span>
+              {prettyRole && (
+                <span className="text-[10px] text-muted-foreground leading-none mt-1 uppercase tracking-tight font-medium truncate max-w-[110px] sm:max-w-[160px]">
+                  {prettyRole}
+                </span>
+              )}
+            </div>
+          </div>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="end"
+        sideOffset={8}
+        className="w-[calc(100vw-24px)] xs:w-[calc(100vw-32px)] sm:w-80 max-w-sm space-y-2 p-3 rounded-xl border-border/70"
+      >
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex items-center gap-3 rounded-md bg-muted px-3 py-2">
+            <Avatar className="h-10 w-10">
+              <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-sm font-medium text-foreground">
+                {name || email}
+              </div>
+              {name && (
+                <div className="truncate text-xs text-muted-foreground">
+                  {email}
+                </div>
+              )}
+              {prettyRole && (
+                <div className="mt-0.5 text-[11px] uppercase tracking-wide text-muted-foreground truncate">
+                  {prettyRole}
+                </div>
+              )}
+            </div>
+          </div>
+        </DropdownMenuLabel>
+
+        {/* Appearance controls: hide for INTERN, remove palette selector */}
+        {user?.role !== "INTERN" && (
+          <div className="rounded-md border px-3 py-2 text-xs">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="font-medium text-foreground">Appearance</span>
+              <div className="inline-flex items-center gap-1 rounded-full border bg-background px-1 py-0.5 text-[10px]">
+                <Button
+                  variant={!isDark ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setTheme("light")}
+                  className={`flex items-center gap-1 rounded-full px-2 py-0.5 h-6 ${
+                    !isDark
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <Sun className="h-3 w-3" />
+                  Light
+                </Button>
+                <Button
+                  variant={isDark ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setTheme("dark")}
+                  className={`flex items-center gap-1 rounded-full px-2 py-0.5 h-6 ${
+                    isDark
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <Moon className="h-3 w-3" />
+                  Dark
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem asChild>
+          <Link
+            href="/dashboard/settings/password"
+            className="flex w-full items-center gap-2 px-2 py-1.5 text-sm font-medium transition-colors hover:bg-muted rounded-md mb-1"
+          >
+            <Key className="h-4 w-4" />
+            <span>Change Password</span>
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem asChild>
+          <Button
+            variant="ghost"
+            className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
+            onClick={() => void logout()}
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            <span>Sign out</span>
+          </Button>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}

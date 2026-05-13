@@ -2,6 +2,7 @@
 
 import { Guard } from "@/components/Guard";
 import { api, Cycle, ReportQuestion, SurveyReport } from "@/lib/api";
+import { DonutChart, ProgressRing } from "@/components/charts";
 import { AlertTriangle, BarChart3, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
@@ -26,6 +27,7 @@ export default function ReportsPage() {
   const [filters, setFilters] = useState<Partial<DraftFilters>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [dashStats, setDashStats] = useState<any>(null);
   const selectedCycle = useMemo(() => cycles.find((cycle) => cycle.id === cycleId), [cycles, cycleId]);
 
   async function loadCycles() {
@@ -55,7 +57,10 @@ export default function ReportsPage() {
     }
   }
 
-  useEffect(() => { loadCycles().catch((err) => setError(err instanceof Error ? err.message : t("load_error"))); }, []);
+  useEffect(() => {
+    loadCycles().catch((err) => setError(err instanceof Error ? err.message : t("load_error")));
+    api("/api/dashboard").then(setDashStats).catch(console.error);
+  }, []);
   useEffect(() => { loadReport().catch(console.error); }, [cycleId, filters]);
 
   function applyFilters() {
@@ -91,6 +96,28 @@ export default function ReportsPage() {
         </header>
 
         <main className="mx-auto max-w-5xl space-y-4 px-4 py-6">
+          {dashStats && (
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm flex flex-col items-center justify-center">
+                <h3 className="text-sm font-semibold text-slate-500 mb-4 w-full text-left uppercase tracking-wider">Response Rate</h3>
+                <ProgressRing value={dashStats.responseRate || 0} label="Completed" size={120} stroke={10} color="#1e3a5f" />
+              </div>
+              <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm md:col-span-2">
+                <h3 className="text-sm font-semibold text-slate-500 mb-4 uppercase tracking-wider">Assignment Status</h3>
+                <div className="flex h-[140px] items-center">
+                  <DonutChart
+                    data={[
+                      { label: "Submitted", value: dashStats.submittedAssignments || 0, color: "#1e3a5f" },
+                      { label: "Pending", value: Math.max(0, (dashStats.totalAssignments || 0) - (dashStats.submittedAssignments || 0)), color: "#94a3b8" }
+                    ]}
+                    total={dashStats.totalAssignments || 0}
+                    size={140}
+                    thickness={24}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
           {loading && (
             <div className="space-y-4">
               <div className="h-24 animate-pulse rounded-md border border-gray-200 bg-white" />
