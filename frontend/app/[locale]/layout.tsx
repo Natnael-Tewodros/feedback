@@ -1,8 +1,9 @@
-import {NextIntlClientProvider} from 'next-intl';
-import {getMessages} from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import "../globals.css";
 import type { Metadata } from "next";
 import { AppShell } from "@/components/AppShell";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   title: "Insa FMs",
@@ -14,19 +15,21 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  params: {locale}
+  params: { locale }
 }: {
   children: React.ReactNode;
-  params: {locale: string};
+  params: { locale: string };
 }) {
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <body>
-        <NextIntlClientProvider messages={messages}>
-          <AppShell>{children}</AppShell>
-        </NextIntlClientProvider>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+          <NextIntlClientProvider messages={messages}>
+            <AppShell>{children}</AppShell>
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

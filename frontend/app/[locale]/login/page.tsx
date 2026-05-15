@@ -28,7 +28,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right side: Login Form */}
-      <div className="flex flex-col items-center justify-center bg-panel p-6 sm:p-10">
+      <div className="flex flex-col items-center justify-center bg-panel dark:bg-slate-950 p-6 sm:p-10">
         <div className="w-full max-w-[400px]">
           <LoginForm />
         </div>

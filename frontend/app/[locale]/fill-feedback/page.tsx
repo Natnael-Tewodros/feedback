@@ -91,7 +91,7 @@ export default function FillFeedbackPage() {
 
   return (
     <Guard>
-      <div className="-m-5 min-h-[calc(100vh-57px)] bg-gradient-to-br from-sky-50 via-white to-teal-50 px-4 py-10">
+      <div className="-m-5 min-h-[calc(100vh-57px)] bg-gradient-to-br from-sky-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900 px-4 py-10">
         <div className="mx-auto max-w-2xl">
           {loading && (
             <div className="flex justify-center py-20">
@@ -104,8 +104,8 @@ export default function FillFeedbackPage() {
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-700">
                 <AlertCircle size={34} />
               </div>
-              <h2 className="mb-2 text-xl font-bold text-slate-900">{t("unavailable_title")}</h2>
-              <p className="text-slate-500">{error}</p>
+              <h2 className="mb-2 text-xl font-bold text-slate-900 dark:text-slate-100">{t("unavailable_title")}</h2>
+              <p className="text-slate-500 dark:text-slate-400">{error}</p>
             </div>
           )}
 
@@ -114,8 +114,8 @@ export default function FillFeedbackPage() {
               <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
                 <CheckCircle2 size={42} />
               </div>
-              <h2 className="mb-2 text-2xl font-bold text-slate-950">{t("thank_you")}</h2>
-              <p className="text-slate-500">{notice || t("recorded")}</p>
+              <h2 className="mb-2 text-2xl font-bold text-slate-950 dark:text-slate-100">{t("thank_you")}</h2>
+              <p className="text-slate-500 dark:text-slate-400">{notice || t("recorded")}</p>
             </div>
           )}
 
@@ -125,8 +125,8 @@ export default function FillFeedbackPage() {
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-white shadow-sm">
                   <ClipboardList size={26} />
                 </div>
-                <h1 className="text-2xl font-bold text-slate-950">{cycle?.title ?? t("title")}</h1>
-                <p className="mt-2 text-slate-500">{cycle?.description || t("subtitle")}</p>
+                <h1 className="text-2xl font-bold text-slate-950 dark:text-slate-100">{cycle?.title ?? t("title")}</h1>
+                <p className="mt-2 text-slate-500 dark:text-slate-400">{cycle?.description || t("subtitle")}</p>
                 {cycle?.endDate && (
                   <p className="mt-2 text-sm font-medium text-amber-700">
                     {t("closes", { date: new Date(cycle.endDate).toLocaleDateString() })}
@@ -134,7 +134,7 @@ export default function FillFeedbackPage() {
                 )}
               </div>
 
-              <div className="mb-5 rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="mb-5 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm">
                 <select value={assignmentId} onChange={(e) => { setAssignmentId(e.target.value ? Number(e.target.value) : ""); setAnswers({}); setError(""); setNotice(""); }}>
                   <option value="">{t("select_assignment")}</option>
                   {assignments.map(a => <option key={a.id} value={a.id}>{a.cycleTitle} - {a.status}</option>)}
@@ -146,7 +146,7 @@ export default function FillFeedbackPage() {
               )}
 
               {selected && !canSubmit && (
-                <div className="rounded-md border border-slate-200 bg-white p-4 text-sm text-slate-500 shadow-sm">
+                <div className="rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-sm text-slate-500 dark:text-slate-400 shadow-sm">
                   {t("cannot_resubmit", { status: selected.status.toLowerCase() })}
                 </div>
               )}
@@ -154,9 +154,9 @@ export default function FillFeedbackPage() {
               {selected && canSubmit && (
                 <form onSubmit={submit} className="space-y-4">
                   {cycleQuestions.map((q, index) => (
-                    <div key={q.id} className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
-                      <label className="flex items-start gap-3 text-sm font-semibold text-slate-900">
-                        <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-sky-50 text-xs text-brand">{index + 1}</span>
+                    <div key={q.id} className="rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">
+                      <label className="flex items-start gap-3 text-sm font-semibold text-slate-900 dark:text-slate-100">
+                        <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-sky-50 dark:bg-sky-900/30 text-xs text-brand dark:text-sky-400">{index + 1}</span>
                         {q.text}
                       </label>
                       <div className="mt-4">
@@ -164,7 +164,7 @@ export default function FillFeedbackPage() {
                         {q.type === "RATING" && (
                           <div className="flex flex-wrap gap-2">
                             {Array.from({ length: (q.ratingMax ?? 5) - (q.ratingMin ?? 1) + 1 }, (_, i) => (q.ratingMin ?? 1) + i).map(value => (
-                              <label key={value} className={`cursor-pointer rounded-md border px-3 py-2 text-sm ${answers[q.id] === String(value) ? "border-brand bg-sky-50 text-brand" : "border-slate-200 bg-white text-slate-700"}`}>
+                              <label key={value} className={`cursor-pointer rounded-md border px-3 py-2 text-sm ${answers[q.id] === String(value) ? "border-brand bg-sky-50 dark:bg-brand/20 text-brand" : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"}`}>
                                 <input className="sr-only" type="radio" name={`question-${q.id}`} value={value} checked={answers[q.id] === String(value)} onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })} />
                                 {value}
                               </label>
@@ -173,10 +173,10 @@ export default function FillFeedbackPage() {
                         )}
                         {q.type === "YES_NO" && (
                           <div className="flex gap-3 text-sm">
-                            <label className={`cursor-pointer rounded-md border px-4 py-2 ${answers[q.id] === "true" ? "border-brand bg-sky-50 text-brand" : "border-slate-200 bg-white text-slate-700"}`}>
+                            <label className={`cursor-pointer rounded-md border px-4 py-2 ${answers[q.id] === "true" ? "border-brand bg-sky-50 dark:bg-brand/20 text-brand" : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"}`}>
                               <input className="sr-only" type="radio" name={`question-${q.id}`} value="true" checked={answers[q.id] === "true"} onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })} /> {tCommon("yes")}
                             </label>
-                            <label className={`cursor-pointer rounded-md border px-4 py-2 ${answers[q.id] === "false" ? "border-brand bg-sky-50 text-brand" : "border-slate-200 bg-white text-slate-700"}`}>
+                            <label className={`cursor-pointer rounded-md border px-4 py-2 ${answers[q.id] === "false" ? "border-brand bg-sky-50 dark:bg-brand/20 text-brand" : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"}`}>
                               <input className="sr-only" type="radio" name={`question-${q.id}`} value="false" checked={answers[q.id] === "false"} onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })} /> {tCommon("no")}
                             </label>
                           </div>
@@ -184,7 +184,7 @@ export default function FillFeedbackPage() {
                         {q.type === "MCQ" && (
                           <div className="space-y-2 text-sm">
                             {q.choices.map(c => (
-                              <label key={c.id} className={`flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 ${answers[q.id] === String(c.id) ? "border-brand bg-sky-50 text-brand" : "border-slate-200 bg-white text-slate-700"}`}>
+                              <label key={c.id} className={`flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 ${answers[q.id] === String(c.id) ? "border-brand bg-sky-50 dark:bg-brand/20 text-brand" : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"}`}>
                                 <input type="radio" name={`question-${q.id}`} value={c.id} checked={answers[q.id] === String(c.id)} onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })} />
                                 {c.label}
                               </label>

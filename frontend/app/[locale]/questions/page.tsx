@@ -135,13 +135,13 @@ export default function QuestionsPage() {
           <h2 className="text-lg font-medium">{t("questions_list")}</h2>
           <ul className="mt-4 space-y-2">
             {questions.map((question) => (
-              <li key={question.id} className="flex items-center justify-between rounded-md border p-2">
-                <span>{question.text}</span>
+              <li key={question.id} className="flex items-center justify-between rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-sm">
+                <span className="dark:text-slate-200">{question.text}</span>
                 <div className="flex gap-4">
-                  <button onClick={() => edit(question)} className="text-sm text-blue-500 hover:text-blue-700">
+                  <button onClick={() => edit(question)} className="text-sm text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
                     {t("edit_button")}
                   </button>
-                  <button onClick={() => deleteQuestion(question.id!)} className="text-sm text-red-500 hover:text-red-700">
+                  <button onClick={() => deleteQuestion(question.id!)} className="text-sm text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
                     {t("delete_button")}
                   </button>
                 </div>
@@ -150,8 +150,8 @@ export default function QuestionsPage() {
           </ul>
         </div>
         <div>
-          <h2 className="text-lg font-medium">{editingQuestion ? t("edit_question_title") : t("new_question_title")}</h2>
-          <form onSubmit={save} className="mt-4 space-y-4 rounded-md border bg-white p-4">
+          <h2 className="text-lg font-medium dark:text-slate-100">{editingQuestion ? t("edit_question_title") : t("new_question_title")}</h2>
+          <form onSubmit={save} className="mt-4 space-y-4 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm">
             <label className="block">
               <span className="text-sm font-medium">{t("question_text_label")}</span>
               <input type="text" value={text} onChange={(e) => setText(e.target.value)} className="mt-1 w-full" required />
@@ -167,33 +167,33 @@ export default function QuestionsPage() {
             </label>
             <div className="grid grid-cols-2 gap-4">
               <label className="block">
-                <span className="text-sm font-medium">Start Date</span>
-                <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="mt-1 w-full rounded-md border p-2 text-sm" />
+                <span className="text-sm font-medium dark:text-slate-300">Start Date</span>
+                <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="mt-1 w-full rounded-md border dark:border-slate-700 p-2 text-sm" />
               </label>
               <label className="block">
-                <span className="text-sm font-medium">End Date</span>
-                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="mt-1 w-full rounded-md border p-2 text-sm" />
+                <span className="text-sm font-medium dark:text-slate-300">End Date</span>
+                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="mt-1 w-full rounded-md border dark:border-slate-700 p-2 text-sm" />
               </label>
             </div>
             {type === "RATING" && (
               <div className="grid grid-cols-2 gap-4">
                 <label className="block">
-                  <span className="text-sm font-medium">Min Rating</span>
+                  <span className="text-sm font-medium dark:text-slate-300">Min Rating</span>
                   <input
                     type="number"
                     value={ratingMin}
                     onChange={(e) => setRatingMin(e.target.value)}
-                    className="mt-1 w-full rounded-md border p-2 text-sm"
+                    className="mt-1 w-full rounded-md border dark:border-slate-700 p-2 text-sm"
                     required
                   />
                 </label>
                 <label className="block">
-                  <span className="text-sm font-medium">Max Rating</span>
+                  <span className="text-sm font-medium dark:text-slate-300">Max Rating</span>
                   <input
                     type="number"
                     value={ratingMax}
                     onChange={(e) => setRatingMax(e.target.value)}
-                    className="mt-1 w-full rounded-md border p-2 text-sm"
+                    className="mt-1 w-full rounded-md border dark:border-slate-700 p-2 text-sm"
                     required
                   />
                 </label>
@@ -225,7 +225,7 @@ export default function QuestionsPage() {
             )}
             <div className="flex justify-end gap-2">
               {editingQuestion && (
-                <button type="button" onClick={reset} className="px-3 py-2 text-sm">
+                <button type="button" onClick={reset} className="px-3 py-2 text-sm dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors">
                   {t("cancel_button")}
                 </button>
               )}

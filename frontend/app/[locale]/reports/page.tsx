@@ -79,8 +79,8 @@ export default function ReportsPage() {
 
   return (
     <Guard>
-      <div className="-m-5 min-h-[calc(100vh-57px)] bg-gray-50">
-        <header className="sticky top-0 z-10 border-b border-gray-200 bg-white">
+      <div className="-m-5 min-h-[calc(100vh-57px)] bg-gray-50 dark:bg-slate-950">
+        <header className="sticky top-0 z-10 border-b border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900">
           <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-3 px-4">
             <div className="flex min-w-0 items-center gap-2">
               <span className="flex items-center gap-2 whitespace-nowrap text-lg font-bold text-brand">
@@ -98,11 +98,11 @@ export default function ReportsPage() {
         <main className="mx-auto max-w-5xl space-y-4 px-4 py-6">
           {dashStats && (
             <div className="grid gap-4 md:grid-cols-3">
-              <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm flex flex-col items-center justify-center">
+              <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm flex flex-col items-center justify-center">
                 <h3 className="text-sm font-semibold text-slate-500 mb-4 w-full text-left uppercase tracking-wider">Response Rate</h3>
                 <ProgressRing value={dashStats.responseRate || 0} label="Completed" size={120} stroke={10} color="#1e3a5f" />
               </div>
-              <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm md:col-span-2">
+              <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm md:col-span-2">
                 <h3 className="text-sm font-semibold text-slate-500 mb-4 uppercase tracking-wider">Assignment Status</h3>
                 <div className="flex h-[140px] items-center">
                   <DonutChart
@@ -120,9 +120,9 @@ export default function ReportsPage() {
           )}
           {loading && (
             <div className="space-y-4">
-              <div className="h-24 animate-pulse rounded-md border border-gray-200 bg-white" />
+              <div className="h-24 animate-pulse rounded-md border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900" />
               {[1, 2, 3].map((item) => (
-                <div key={item} className="h-52 animate-pulse rounded-md border border-gray-200 bg-white" />
+                <div key={item} className="h-52 animate-pulse rounded-md border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900" />
               ))}
             </div>
           )}
@@ -141,9 +141,9 @@ export default function ReportsPage() {
 
           {!loading && !error && (
             <>
-              <div className="flex flex-wrap items-center justify-between gap-6 rounded-md border border-gray-200 bg-white p-5 shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-6 rounded-md border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900">{report?.title ?? t("select_cycle")}</h1>
+                  <h1 className="text-xl font-bold text-gray-900 dark:text-slate-100">{report?.title ?? t("select_cycle")}</h1>
                   <p className="mt-0.5 text-sm text-gray-400">
                     {report ? t("generated", { date: new Date(report.generatedAt).toLocaleString() }) : t("choose_cycle_report")}
                   </p>
@@ -158,7 +158,7 @@ export default function ReportsPage() {
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-end gap-3 rounded-md border border-gray-200 bg-white px-5 py-4 shadow-sm">
+              <div className="flex flex-wrap items-end gap-3 rounded-md border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-5 py-4 shadow-sm">
                 <Field label={t("feedback_cycle")} value={String(cycleId)} onChange={(value) => setCycleId(value ? Number(value) : "")}>
                   <option value="">{t("select_cycle")}</option>
                   {cycles.map((cycle) => (
@@ -168,7 +168,7 @@ export default function ReportsPage() {
                 <Field label={t("from")} type="date" value={draft.dateFrom} onChange={(value) => setDraft((current) => ({ ...current, dateFrom: value }))} />
                 <Field label={t("to")} type="date" value={draft.dateTo} onChange={(value) => setDraft((current) => ({ ...current, dateTo: value }))} />
                 <button onClick={applyFilters} className="bg-brand text-white hover:bg-sky-800">{t("apply")}</button>
-                <button onClick={clearFilters} className="border border-gray-200 bg-white text-gray-500 hover:bg-gray-50">{t("clear")}</button>
+                <button onClick={clearFilters} className="border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800">{t("clear")}</button>
                 {(filters.dateFrom || filters.dateTo) && (
                   <span className="self-center text-xs text-brand">
                     {t("filtered", { from: filters.dateFrom ?? "...", to: filters.dateTo ?? "..." })}
@@ -181,7 +181,7 @@ export default function ReportsPage() {
                   <QuestionReportCard key={question.questionId} question={question} index={index} />
                 ))}
                 {report && report.questions.length === 0 && (
-                  <div className="rounded-md border border-gray-200 bg-white p-5 text-sm text-gray-500">{t("no_questions")}</div>
+                  <div className="rounded-md border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 text-sm text-gray-500 dark:text-slate-400">{t("no_questions")}</div>
                 )}
               </div>
             </>
@@ -195,7 +195,7 @@ export default function ReportsPage() {
 function Metric({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="text-center">
-      <div className="text-2xl font-bold text-gray-900">{value}</div>
+      <div className="text-2xl font-bold text-gray-900 dark:text-slate-100">{value}</div>
       <div className="text-xs text-gray-400">{label}</div>
     </div>
   );
@@ -210,7 +210,7 @@ function Field({ label, type, value, onChange, children }: {
 }) {
   return (
     <div className="flex min-w-36 flex-col gap-1">
-      <label className="text-xs font-medium text-gray-500">{label}</label>
+      <label className="text-xs font-medium text-gray-500 dark:text-slate-400">{label}</label>
       {children ? (
         <select value={value} onChange={(e) => onChange(e.target.value)} className="text-sm">
           {children}
@@ -227,10 +227,10 @@ function QuestionReportCard({ question, index }: { question: ReportQuestion; ind
   const maxChoiceCount = Math.max(1, ...question.choices.map(choice => choice.count));
 
   return (
-    <div className="overflow-hidden rounded-md border border-gray-200 bg-white shadow-sm">
-      <div className="flex items-center gap-3 border-b border-gray-100 bg-gray-50 px-4 py-3">
-        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-sky-100 text-xs font-bold text-brand">{index + 1}</span>
-        <span className="min-w-0 flex-1 truncate text-sm font-medium text-gray-700">{question.text}</span>
+    <div className="overflow-hidden rounded-md border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+      <div className="flex items-center gap-3 border-b border-gray-100 dark:border-slate-800/50 bg-gray-50 dark:bg-slate-800/50 px-4 py-3">
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-sky-100 dark:bg-sky-900/30 text-xs font-bold text-brand dark:text-sky-400">{index + 1}</span>
+        <span className="min-w-0 flex-1 truncate text-sm font-medium text-gray-700 dark:text-slate-200">{question.text}</span>
         <span className="hidden text-xs text-gray-400 sm:block">{question.type}</span>
       </div>
       <div className="space-y-4 p-5">
@@ -260,7 +260,7 @@ function QuestionReportCard({ question, index }: { question: ReportQuestion; ind
         {question.textAnswers.length > 0 && (
           <div className="space-y-2">
             {question.textAnswers.slice(0, 5).map((answer, answerIndex) => (
-              <div key={`${question.questionId}-${answerIndex}`} className="rounded-md border border-gray-100 bg-gray-50 p-3 text-sm text-gray-700">{answer}</div>
+              <div key={`${question.questionId}-${answerIndex}`} className="rounded-md border border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/50 p-3 text-sm text-gray-700 dark:text-slate-300">{answer}</div>
             ))}
           </div>
         )}

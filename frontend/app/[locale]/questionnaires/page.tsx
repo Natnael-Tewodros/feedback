@@ -107,12 +107,12 @@ export default function QuestionnairesPage() {
           {cycles.map((cycle) => (
             <div
               key={cycle.id}
-              className="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-md border border-gray-200 bg-white p-4 shadow-sm hover:border-brand"
+              className="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm hover:border-brand dark:hover:border-brand"
             >
               <Link href={`/${locale}/questionnaires/${cycle.id}/questions`} className="flex-1">
                 <h3 className="font-medium text-brand hover:underline">{cycle.title}</h3>
-                <p className="text-sm text-gray-500">{cycle.description}</p>
-                {cycle.isAnonymous && <span className="inline-block mt-1 px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded">Anonymous</span>}
+                <p className="text-sm text-slate-500 dark:text-slate-400">{cycle.description}</p>
+                {cycle.isAnonymous && <span className="inline-block mt-1 px-2 py-0.5 text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded">Anonymous</span>}
               </Link>
               <div className="flex items-center gap-2">
                 <button
@@ -134,11 +134,11 @@ export default function QuestionnairesPage() {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="w-full max-w-md rounded-md bg-white p-6 shadow-lg">
-            <h2 className="text-lg font-medium">{t("create_new_survey")}</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-md bg-white dark:bg-slate-900 p-6 shadow-lg border border-slate-200 dark:border-slate-800">
+            <h2 className="text-lg font-medium dark:text-slate-100">{t("create_new_survey")}</h2>
             <form onSubmit={handleCreate} className="mt-4 space-y-4">
-              <label className="text-xs font-medium text-gray-600 block">
+              <label className="text-xs font-medium text-slate-600 dark:text-slate-300 block">
                 {t("survey_title_label")}
                 <input
                   className="mt-1 w-full rounded border px-2 py-1"
@@ -147,25 +147,25 @@ export default function QuestionnairesPage() {
                   placeholder={t("survey_title_placeholder")}
                 />
               </label>
-              <label className="text-xs font-medium text-gray-600 block">
+              <label className="text-xs font-medium text-slate-600 dark:text-slate-300 block">
                 {t("survey_description_label")}
                 <textarea
-                  className="mt-1 w-full rounded border px-2 py-1"
+                  className="mt-1 w-full rounded border dark:border-slate-700 px-2 py-1"
                   rows={3}
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
                   placeholder={t("survey_description_placeholder")}
                 />
               </label>
-              <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+              <div className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 px-4 py-3">
                 <div>
-                  <Label htmlFor="anonymous-switch" className="text-sm font-medium text-gray-700 cursor-pointer">
+                  <Label htmlFor="anonymous-switch" className="text-sm font-medium text-slate-700 dark:text-slate-200 cursor-pointer">
                     {t("survey_anonymous_label")}
                   </Label>
-                  <p className="text-xs text-gray-500 mt-0.5">Responses will not be linked to respondents</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Responses will not be linked to respondents</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500">{isAnonymous ? "Yes" : "No"}</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">{isAnonymous ? "Yes" : "No"}</span>
                   <Switch
                     id="anonymous-switch"
                     checked={isAnonymous}
@@ -177,7 +177,7 @@ export default function QuestionnairesPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-3 py-2 text-sm font-medium"
+                  className="px-3 py-2 text-sm font-medium dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors"
                 >
                   {t("cancel_button")}
                 </button>

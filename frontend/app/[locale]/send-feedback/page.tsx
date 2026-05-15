@@ -111,17 +111,17 @@ export default function SendFeedbackPage() {
   return (
     <Guard>
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
-      {error && <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
-      {notice && <div className="mb-4 rounded-md border border-teal-200 bg-teal-50 p-3 text-sm text-teal-800">{notice}</div>}
-      {loading && <div className="rounded-md border border-line bg-white p-4 text-sm text-muted">{tCommon("loading")}</div>}
+      {error && <div className="mb-4 rounded-md border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/20 p-3 text-sm text-red-700 dark:text-red-400">{error}</div>}
+      {notice && <div className="mb-4 rounded-md border border-teal-200 dark:border-teal-900/50 bg-teal-50 dark:bg-teal-900/20 p-3 text-sm text-teal-800 dark:text-teal-400">{notice}</div>}
+      {loading && <div className="rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-sm text-muted dark:text-slate-400">{tCommon("loading")}</div>}
       {!loading && !canManage && (
-        <div className="rounded-md border border-line bg-white p-4 text-sm text-muted">
+        <div className="rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-sm text-muted dark:text-slate-400">
           {t("view_only")}
         </div>
       )}
       {!loading && canManage && (
       <>
-      <form onSubmit={createCycle} className="mb-5 rounded-md border border-line bg-white p-4">
+      <form onSubmit={createCycle} className="mb-5 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
         <div className="grid gap-3 md:grid-cols-[1fr_auto]">
           <input placeholder={t("cycle_title")} value={title} onChange={(e) => setTitle(e.target.value)} />
           <button type="submit" className="bg-brand text-white">{t("create_cycle")}</button>
@@ -135,15 +135,15 @@ export default function SendFeedbackPage() {
         </div>
       </form>
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-md border border-line bg-white p-4">
-          <h2 className="font-semibold">{t("cycle")}</h2>
+        <div className="rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
+          <h2 className="font-semibold dark:text-slate-100">{t("cycle")}</h2>
           <select className="mt-3" value={cycleId} onChange={(e) => setCycleId(e.target.value ? Number(e.target.value) : "")}>
             <option value="">{t("select_cycle")}</option>
             {cycles.map(c => <option key={c.id} value={c.id}>{c.title} ({c.status})</option>)}
           </select>
         </div>
-        <div className="rounded-md border border-line bg-white p-4">
-          <h2 className="font-semibold">{t("recipients")}</h2>
+        <div className="rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
+          <h2 className="font-semibold dark:text-slate-100">{t("recipients")}</h2>
           <div className="mt-3 space-y-2">
             {users.map(u => (
               <label key={u.id} className="flex gap-2 text-sm">

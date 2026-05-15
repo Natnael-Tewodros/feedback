@@ -49,7 +49,7 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="w-full shadow-xl border border-slate-200">
+      <Card className="w-full shadow-xl border border-slate-200 dark:border-slate-800 dark:bg-slate-900">
         <CardHeader className="text-center pb-4 pt-8 px-8">
           {/* Logo — visible on mobile (hidden on desktop where the left panel shows it) */}
           <div className="flex justify-center mb-4 lg:hidden">
@@ -61,10 +61,10 @@ export function LoginForm({
               />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-[#1e3a5f] tracking-tight">
+          <CardTitle className="text-2xl font-bold text-[#1e3a5f] dark:text-slate-100 tracking-tight">
             {t("title")}
           </CardTitle>
-          <CardDescription className="mt-1 text-sm text-slate-500">
+          <CardDescription className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             Enter your credentials to access your account
           </CardDescription>
         </CardHeader>
@@ -73,7 +73,7 @@ export function LoginForm({
           <form onSubmit={submit} className="space-y-5">
             {/* Email */}
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-sm font-medium text-slate-700">
+              <Label htmlFor="email" className="text-sm font-medium text-slate-700 dark:text-slate-300">
                 {t("email")}
               </Label>
               <Input
@@ -83,13 +83,13 @@ export function LoginForm({
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="h-10 border-slate-300 focus:border-[#1e3a5f] focus:ring-[#1e3a5f]/20"
+                className="h-10 border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-[#1e3a5f] focus:ring-[#1e3a5f]/20 dark:focus:border-sky-500 dark:focus:ring-sky-500/20"
               />
             </div>
 
             {/* Password */}
             <div className="space-y-1.5">
-              <Label htmlFor="password" className="text-sm font-medium text-slate-700">
+              <Label htmlFor="password" className="text-sm font-medium text-slate-700 dark:text-slate-300">
                 {t("password")}
               </Label>
               <Input
@@ -99,13 +99,13 @@ export function LoginForm({
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="h-10 border-slate-300 focus:border-[#1e3a5f] focus:ring-[#1e3a5f]/20"
+                className="h-10 border-slate-300 dark:border-slate-700 dark:bg-slate-800 focus:border-[#1e3a5f] focus:ring-[#1e3a5f]/20 dark:focus:border-sky-500 dark:focus:ring-sky-500/20"
               />
             </div>
 
             {/* Error message */}
             {error && (
-              <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-600 border border-red-200">
+              <p className="rounded-md bg-red-50 dark:bg-red-900/20 px-3 py-2 text-sm text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/50">
                 {error}
               </p>
             )}

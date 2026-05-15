@@ -29,15 +29,15 @@ export default function DashboardPage() {
             <Link
               key={module.href}
               href={`/${locale}/${module.href}`}
-              className="group rounded-md border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-teal-200 hover:shadow-md"
+              className="group rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-teal-200 dark:hover:border-teal-700 hover:shadow-md"
             >
               <div className="flex items-start gap-4">
-                <div className="rounded-md border border-teal-100 bg-teal-50 p-2.5 text-brand transition group-hover:bg-brand group-hover:text-white">
+                <div className="rounded-md border border-teal-100 dark:border-teal-900/50 bg-teal-50 dark:bg-teal-900/20 p-2.5 text-brand dark:text-teal-400 transition group-hover:bg-brand group-hover:text-white dark:group-hover:bg-teal-500 dark:group-hover:text-white">
                   <Icon size={20} />
                 </div>
                 <div className="min-w-0">
-                  <div className="font-semibold text-ink">{module.title}</div>
-                  <div className="mt-1 text-sm leading-6 text-muted">{module.text}</div>
+                  <div className="font-semibold text-ink dark:text-slate-100">{module.title}</div>
+                  <div className="mt-1 text-sm leading-6 text-muted dark:text-slate-400">{module.text}</div>
                 </div>
               </div>
             </Link>
