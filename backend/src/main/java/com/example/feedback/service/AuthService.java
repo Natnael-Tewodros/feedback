@@ -45,11 +45,11 @@ public class AuthService {
 
         var user = users.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
         
-        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPasswordHash())) {
             throw new IllegalArgumentException("Incorrect current password");
         }
 
-        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
         users.save(user);
     }
 }
